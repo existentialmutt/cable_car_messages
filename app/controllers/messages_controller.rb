@@ -12,14 +12,14 @@ class MessagesController < ApplicationController
     render(
       operations: cable_car.append(
             selector: "#messages",
-            html: self.class.render(@message, assigns: {message: @message})
+            html: @message.to_form_html
           ))
   end
 
   def edit
     render operations: cable_car.outer_html(
-      selector: dom_id(@message),
-      html: self.class.render(@message, assigns: {message: @message})
+      selector: @message,
+      html: @message.to_form_html
     )
   end
 
@@ -27,28 +27,28 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     if @message.save
       render operations: cable_car
-        .append(selector: "#messages", html: self.class.render(@message))
+        .append(selector: "#messages", html: @message.to_html)
         .remove(selector: "#new_message")
     else
       render operations: cable_car
-        .outer_html(selector: dom_id(@message), html: self.class.render(@message, assigns: {message: @message}))
+        .outer_html(selector: @message, html: @message.to_form_html)
     end
   end
 
   def update
     if @message.update(message_params)
       render operations: cable_car
-        .outer_html(selector: dom_id(@message), html: self.class.render(@message))
+        .outer_html(selector: @message, html: @message.to_html)
     else
       render operations: cable_car
-        .outer_html(selector: dom_id(@message), html: self.class.render(@message, assigns: {message: @message}))
+        .outer_html(selector: @message, html: @message.to_form_html)
     end
   end
 
   def destroy
     @message.destroy
     render operations: cable_car
-      .remove(selector: dom_id(@message))
+      .remove(selector: @message)
   end
 
   private
