@@ -1,0 +1,16 @@
+<div class="card mb-3" id="<%= dom_id(message) %>">
+  <div class="card-body">
+    <%- if message == @message && action_name != "show" %>
+      <%= render "form", message: message %>
+    <%- else %>
+      <p>
+        <%= message.content %>
+      </p>
+
+      <div>
+        <%= link_to "[edit]", edit_message_path(message), data: {remote: true} %>
+        <%= link_to "[delete]", message, data: {remote: true, method: "DELETE", confirm: "Are you sure?"} %>
+      </div>
+    <%- end %>
+  </div>
+</div>
