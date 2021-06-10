@@ -5,15 +5,15 @@ class MessagesController < ApplicationController
 
   def index
     @messages = Message.all
+    respond_to do |format|
+      format.html { render }
+      format.json { render operations: cable_car.inner_html(@messages, html: self.class.render(@messages)) }
+    end
   end
 
   def new
     @message = Message.new
-    render(
-      operations: cable_car.append(
-            selector: "#messages",
-            html: @message.to_form_html
-          ))
+    render operations: cable_car.append(selector: "#messages", html: @message.to_form_html)
   end
 
   def edit

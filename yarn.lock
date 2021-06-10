@@ -4213,9 +4213,9 @@ move-concurrently@^1.0.1:
     run-queue "^1.0.3"
 
 mrujs@^0.3.0-beta.3:
-  version "0.3.0-beta.3"
-  resolved "https://registry.yarnpkg.com/mrujs/-/mrujs-0.3.0-beta.3.tgz#69955a6ea65d0761fa2befbfce95a0869ea0687e"
-  integrity sha512-c6QQrCRkJwocq0uYDT6jnZAM5Ktvy7ZJZZg6QW+uHMSNsLhvF7ZpHg1MzFlwdTt5CsXBGFCEzXen2/wJixOEmQ==
+  version "0.3.0-beta.8"
+  resolved "https://registry.yarnpkg.com/mrujs/-/mrujs-0.3.0-beta.8.tgz#d10e60c821edf3ecaff59953097a77c0ec8c6a6f"
+  integrity sha512-tQ9rHuwIgonU8n+xbY7nzghUEt1EN8Oi8Qw9wY3TaNdPnZyC1MwrgxIzk0ZGEwqlrUViYlaz4ZlfPD3OmOuk/w==
   dependencies:
     morphdom ">=2.6.0 <3.0.0"
 

@@ -3,10 +3,9 @@ class Message < ApplicationRecord
 
   def to_html
     MessagesController.render(self)
-
   end
 
   def to_form_html
-    MessagesController.render(self, assigns: {message: self})
+    MessagesController.render(partial: "form", locals: {message: self})
   end
 end
