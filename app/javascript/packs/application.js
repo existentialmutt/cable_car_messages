@@ -5,14 +5,14 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import Rails from "@rails/ujs"
-Rails.start()
+// import Rails from "@rails/ujs"
+// Rails.start()
 
-// import mrujs from "mrujs";
-// window.mrujs = mrujs.start();
+import mrujs from "mrujs";
+window.mrujs = mrujs.start();
 
-import Turbolinks from "turbolinks"
-Turbolinks.start()
+// import Turbolinks from "turbolinks"
+// Turbolinks.start()
 
 
 
