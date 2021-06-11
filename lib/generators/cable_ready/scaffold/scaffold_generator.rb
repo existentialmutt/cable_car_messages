@@ -5,6 +5,8 @@ require "rails/generators/rails/resource/resource_generator"
 module CableReady
   module Generators
     class ScaffoldGenerator < ResourceGenerator # :nodoc:
+      include Rails::Generators::ResourceHelpers
+
       remove_hook_for :resource_controller
       remove_class_option :actions
 
@@ -29,6 +31,25 @@ module CableReady
         if behavior == :invoke
           invoke stylesheet_engine, [controller_name]
         end
+      end
+
+      def create_root_folder
+        empty_directory File.join("app/views", controller_file_path)
+      end
+
+      #TODO rename _resource.html.erb
+      def copy_view_files
+        available_views.each do |view|
+          formats.each do |format|
+            filename = filename_with_extensions(view, format)
+            template filename, File.join("app/views", controller_file_path, filename)
+          end
+        end
+      end
+
+      private
+      def available_views
+        %w(index edit show new _form)
       end
     end
   end
