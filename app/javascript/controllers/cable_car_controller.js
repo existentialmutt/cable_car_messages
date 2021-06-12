@@ -7,17 +7,9 @@ export default class extends Controller {
     this.element.addEventListener("ajax:complete", this.perform.bind(this))
   }
 
-  // fetch () {
-  //   fetch('/fetch.json', {
-  //     headers: { 'X-Requested-With': 'XMLHttpRequest' }
-  //   })
-  //     .then(response => response.json())
-  //     .then(data => CableReady.perform(data))
-  // }
-
   perform(event) {
     console.log("Performing", event)
-    CableReady.perform(JSON.parse(event.detail[0].responseText))
+    event.detail.response.json().then(operations => CableReady.perform(operations))
   }
 
   alert(event) {
