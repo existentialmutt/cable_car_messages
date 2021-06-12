@@ -10,7 +10,10 @@ export default class extends Controller {
 
   perform(event) {
     console.log("Performing", event)
-    event.detail.response.json().then(operations => CableReady.perform(operations))
+    event.detail.response.json().then(operations => {
+      CableReady.perform(operations)
+      window.mrujs.restart()
+    })
   }
 
   disconnect() {
