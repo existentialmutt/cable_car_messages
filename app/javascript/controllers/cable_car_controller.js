@@ -4,7 +4,8 @@ import CableReady from 'cable_ready'
 export default class extends Controller {
   connect() {
     console.log("Connect!")
-    this.element.addEventListener("ajax:complete", this.perform.bind(this))
+    this.boundPerform = this.perform.bind(this)
+    this.element.addEventListener("ajax:success", this.boundPerform)
   }
 
   perform(event) {
@@ -12,7 +13,7 @@ export default class extends Controller {
     event.detail.response.json().then(operations => CableReady.perform(operations))
   }
 
-  alert(event) {
-    console.log("Hi!", event)
+  disconnect() {
+    this.element.removeEventListener("ajax:success", this.boundPerform)
   }
 }
