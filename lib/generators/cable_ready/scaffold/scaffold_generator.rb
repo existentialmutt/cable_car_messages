@@ -41,7 +41,13 @@ module CableReady
       def copy_view_files
         available_views.each do |view|
           formats.each do |format|
-            filename = filename_with_extensions(view, format)
+            target_view = if view == "_resource"
+                "_#{controller_file_path.singularize}"
+              else
+                view
+              end
+
+            filename = filename_with_extensions(target_view, format)
             template filename, File.join("app/views", controller_file_path, filename)
           end
         end
@@ -49,7 +55,7 @@ module CableReady
 
       private
       def available_views
-        %w(index edit show new _form)
+        %w(index edit show new _form _resource)
       end
     end
   end
