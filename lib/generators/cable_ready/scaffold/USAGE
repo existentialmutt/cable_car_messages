@@ -1,7 +1,11 @@
 Description:
-    Scaffolds an entire resource, from model and migration to controller and
-    views, along with a full test suite. The resource is ready to use as a
-    starting point for your RESTful, resource-oriented application.
+    Creates a CableReady-driven resource scaffold with in-page editing
+    via UJS remote links/forms and `render operations: cable_car`.
+
+    Scaffolds the entire resource, from model and migration to controller and
+    views, along with a full test suite. It will also ensure all javascript
+    dependencies for in-page editing are set up (Stimulus, RailsUJS, and a
+    custom Stimulus controller).
 
     Pass the name of the model (in singular form), either CamelCased or
     under_scored, as the first argument, and an optional list of attribute
@@ -32,10 +36,10 @@ Description:
     in config/routes.rb.
 
     If you want to remove all the generated files, run
-    'bin/rails destroy scaffold ModelName'.
+    'bin/rails destroy cable_ready:scaffold ModelName'.
 
 Examples:
-    `bin/rails generate scaffold post`
-    `bin/rails generate scaffold post title:string body:text published:boolean`
-    `bin/rails generate scaffold purchase amount:decimal tracking_id:integer:uniq`
-    `bin/rails generate scaffold user email:uniq password:digest`
+    `bin/rails generate cable_ready:scaffold post`
+    `bin/rails generate cable_ready:scaffold post title:string body:text published:boolean`
+    `bin/rails generate cable_ready:scaffold purchase amount:decimal tracking_id:integer:uniq`
+    `bin/rails generate cable_ready:scaffold user email:uniq password:digest`

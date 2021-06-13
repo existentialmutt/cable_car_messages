@@ -1,3 +1,0 @@
-<%%= render @<%= singular_table_name %> %>
-
-<%%= link_to 'Back', <%= index_helper %>_path %>

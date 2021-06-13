@@ -1,62 +1,91 @@
-# frozen_string_literal: true
-
 require "rails/generators/rails/resource/resource_generator"
+require "rake"
 
-module CableReady
-  module Generators
-    class ScaffoldGenerator < ResourceGenerator # :nodoc:
-      include Rails::Generators::ResourceHelpers
+class CableReady::ScaffoldGenerator < Rails::Generators::ResourceGenerator
+  include Rails::Generators::ResourceHelpers
 
-      remove_hook_for :resource_controller
-      remove_class_option :actions
+  source_root File.expand_path('templates', __dir__)
+  remove_hook_for :resource_controller
+  remove_class_option :actions
 
-      class_option :stylesheets, type: :boolean, desc: "Generate Stylesheets"
-      class_option :stylesheet_engine, desc: "Engine for Stylesheets"
-      class_option :assets, type: :boolean
-      class_option :resource_route, type: :boolean
-      class_option :scaffold_stylesheet, type: :boolean
+  check_class_collision suffix: "Controller"
 
-      def handle_skip
-        @options = @options.merge(stylesheets: false) unless options[:assets]
-        @options = @options.merge(stylesheet_engine: false) unless options[:stylesheets] && options[:scaffold_stylesheet]
+  def create_controller_files
+    template "controller.rb", File.join("app/controllers", controller_class_path, "#{controller_file_name}_controller.rb")
+  end
+
+  def create_view_root
+    empty_directory File.join("app/views", controller_file_path)
+  end
+
+  # TODO ERB only for now, add alternate template engine support
+  def copy_view_files
+    available_views.each do |view|
+      target_view = if view == "_resource"
+        "_#{controller_file_path.singularize}"
+      else
+        view
       end
 
-      hook_for :scaffold_controller, required: true
-
-      hook_for :assets do |assets|
-        invoke assets, [controller_name]
-      end
-
-      hook_for :stylesheet_engine do |stylesheet_engine|
-        if behavior == :invoke
-          invoke stylesheet_engine, [controller_name]
-        end
-      end
-
-      def create_root_folder
-        empty_directory File.join("app/views", controller_file_path)
-      end
-
-      #TODO rename _resource.html.erb
-      def copy_view_files
-        available_views.each do |view|
-          formats.each do |format|
-            target_view = if view == "_resource"
-                "_#{controller_file_path.singularize}"
-              else
-                view
-              end
-
-            filename = filename_with_extensions(target_view, format)
-            template filename, File.join("app/views", controller_file_path, filename)
-          end
-        end
-      end
-
-      private
-      def available_views
-        %w(index edit show new _form _resource)
-      end
+      source_filename = File.join("erb", (view + ".html.erb"))
+      target_filename = target_view + ".html.erb"
+      template source_filename, File.join("app/views", controller_file_path, target_filename)
     end
   end
+
+  def install_scripts
+    if defined?(Webpacker)
+      main_folder = Webpacker.config.source_path.to_s.gsub("#{Rails.root}/", "")
+      unless File.exist? File.join("app", "javascript", "controllers")
+        say "Adding Stimulus"
+        system "bin/rake webpacker:install:stimulus"
+      end
+    else
+      main_folder = File.join("app", "javascript")
+      # TODO automate?
+      say "Please be sure Stimulus is installed. See https://github.com/hotwired/stimulus-rails"
+    end
+
+
+    filepath = [
+      "#{main_folder}/controllers/index.js",
+      "#{main_folder}/controllers/index.ts",
+      "#{main_folder}/packs/application.js",
+      "#{main_folder}/packs/application.ts"
+    ]
+      .select { |path| File.exist?(path) }
+      .map { |path| Rails.root.join(path) }
+      .first
+
+    lines = File.open(filepath, "r") { |f| f.readlines }
+
+    unless lines.find { |line| line.start_with?("import Rails") }
+      matches = lines.select { |line| line =~ /\A(require|import)/ }
+      lines.insert lines.index(matches.last).to_i + 1, "import Rails from '@rails/ujs'\n"
+      File.open(filepath, "w") { |f| f.write lines.join }
+
+      say "Adding @rails/ujs via yarn"
+      system "bin/yarn add @rails/ujs"
+    end
+
+    copy_file "cable_car_controller.js", File.join(main_folder, "controllers", "cable_car_controller.js")
+  end
+
+  private
+    def available_views
+      %w(index show _form _resource)
+    end
+
+    def permitted_params
+      attachments, others = attributes_names.partition { |name| attachments?(name) }
+      params = others.map { |name| ":#{name}" }
+      params += attachments.map { |name| "#{name}: []" }
+      params.join(", ")
+    end
+
+    def attachments?(name)
+      attribute = attributes.find { |attr| attr.name == name }
+      attribute&.attachments?
+    end
+
 end

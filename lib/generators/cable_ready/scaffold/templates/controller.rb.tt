@@ -23,7 +23,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # GET <%= route_url %>/new
   def new
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
-    render operations: cable_car.append(selector: "#<%= plural_table_name %>", html: render_<%= singular_table_name %>(@<%= singular_table_name %>))
+    render operations: cable_car.append(selector: "#<%= plural_table_name %>", html: render_form(@<%= singular_table_name %>))
   end
 
   # GET <%= route_url %>/1/edit
@@ -38,9 +38,9 @@ class <%= controller_class_name %>Controller < ApplicationController
     if @<%= orm_instance.save %>
       render operations: cable_car
         .append(selector: "#<%= plural_table_name %>", html: render_<%= singular_table_name %>(@<%= singular_table_name %>))
-        .remove(selector: "#<%= singular_table_name %>")
+        .remove(selector: "#new_<%= singular_table_name %>")
     else
-      render operations: cable_car.outer_html(selector: @<%= singular_table_name %>, html: render_form(@<%= singular_table_name %>)
+      render operations: cable_car.outer_html(selector: @<%= singular_table_name %>, html: render_form(@<%= singular_table_name %>))
     end
   end
 

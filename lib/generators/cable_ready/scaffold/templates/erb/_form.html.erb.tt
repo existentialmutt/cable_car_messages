@@ -1,4 +1,4 @@
-<%%= form_with(model: <%= model_resource_name %>, data: {remote: true}) do |form| %>
+<%%= form_with(model: <%= model_resource_name %>, data: {remote: true}, id: dom_id(<%= singular_table_name %>)) do |form| %>
   <%% if <%= singular_table_name %>.errors.any? %>
     <div id="error_explanation">
       <h2><%%= pluralize(<%= singular_table_name %>.errors.count, "error") %> prohibited this <%= singular_table_name %> from being saved:</h2>
@@ -33,6 +33,6 @@
 <% end -%>
   <div class="actions">
     <%%= form.submit %>
-    <%%= link_to "Cancel", <%= plural_table_name %>_path, data: {remote: true} %>
+    <%%= link_to "Cancel", <%= plural_table_name %>_path, data: {remote: true, type: "json"} %>
   </div>
 <%% end %>
