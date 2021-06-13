@@ -1,0 +1,11 @@
+<div data-controller="cable-car">
+  <h1>Posts</h1>
+
+  <div id="posts">
+    <%= render @posts %>
+  </div>
+
+  <br>
+
+  <%= link_to 'New Post', new_post_path, data: {remote: true} %>
+</div>

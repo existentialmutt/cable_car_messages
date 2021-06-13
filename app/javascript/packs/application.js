@@ -9,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 // window.mrujs = mrujs.start();
 
 import Turbolinks from "turbolinks"
+import Rails from '@rails/ujs'
+Rails.start()
 Turbolinks.start()
+
 
 import "controllers"

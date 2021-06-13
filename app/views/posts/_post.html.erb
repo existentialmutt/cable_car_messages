@@ -1,0 +1,12 @@
+<div id="<%= dom_id(post) %>">
+  <dl>
+          <dt>Content</dt>
+      <dd><%= post.content %></dd>
+      </dl>
+
+  <div class="actions">
+    <td><%= link_to '[show]', post %></td>
+    <td><%= link_to '[edit]', edit_post_path(post), data: {remote: true}%></td>
+    <td><%= link_to '[destroy]', post, method: :delete, data: { confirm: 'Are you sure?', remote: true } %></td>
+  </div>
+</div>

@@ -14,18 +14,18 @@
 <% attributes.each do |attribute| -%>
   <div class="field">
 <% if attribute.password_digest? -%>
-    <%%= form.label :password %>
+    <%%= form.label :password %><br>
     <%%= form.password_field :password %>
   </div>
 
   <div class="field">
-    <%%= form.label :password_confirmation %>
+    <%%= form.label :password_confirmation %><br>
     <%%= form.password_field :password_confirmation %>
 <% elsif attribute.attachments? -%>
-    <%%= form.label :<%= attribute.column_name %> %>
+    <%%= form.label :<%= attribute.column_name %> %><br>
     <%%= form.<%= attribute.field_type %> :<%= attribute.column_name %>, multiple: true %>
 <% else -%>
-    <%%= form.label :<%= attribute.column_name %> %>
+    <%%= form.label :<%= attribute.column_name %> %><br>
     <%%= form.<%= attribute.field_type %> :<%= attribute.column_name %> %>
 <% end -%>
   </div>

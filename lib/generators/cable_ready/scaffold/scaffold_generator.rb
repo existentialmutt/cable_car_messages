@@ -41,15 +41,13 @@ class CableReady::ScaffoldGenerator < Rails::Generators::ResourceGenerator
         system "bin/rake webpacker:install:stimulus"
       end
     else
-      main_folder = File.join("app", "javascript")
+      main_folder = File.join("app", "assets", "javascripts")
       # TODO automate?
       say "Please be sure Stimulus is installed. See https://github.com/hotwired/stimulus-rails"
     end
 
 
     filepath = [
-      "#{main_folder}/controllers/index.js",
-      "#{main_folder}/controllers/index.ts",
       "#{main_folder}/packs/application.js",
       "#{main_folder}/packs/application.ts"
     ]
@@ -61,14 +59,14 @@ class CableReady::ScaffoldGenerator < Rails::Generators::ResourceGenerator
 
     unless lines.find { |line| line.start_with?("import Rails") }
       matches = lines.select { |line| line =~ /\A(require|import)/ }
-      lines.insert lines.index(matches.last).to_i + 1, "import Rails from '@rails/ujs'\n"
+      lines.insert lines.index(matches.last).to_i + 1, "import Rails from '@rails/ujs'\nRails.start()\n"
       File.open(filepath, "w") { |f| f.write lines.join }
 
       say "Adding @rails/ujs via yarn"
       system "bin/yarn add @rails/ujs"
     end
 
-    copy_file "cable_car_controller.js", File.join(main_folder, "controllers", "cable_car_controller.js")
+    template "cable_car_controller.js", File.join(main_folder, "controllers", "cable_car_controller.js")
   end
 
   private

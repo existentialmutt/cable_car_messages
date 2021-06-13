@@ -1,0 +1,23 @@
+<%= form_with(model: post, data: {remote: true}, id: dom_id(post)) do |form| %>
+  <% if post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+        <% post.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :content %><br>
+    <%= form.text_area :content %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+    <%= link_to "Cancel", posts_path, data: {remote: true, type: "json"} %>
+  </div>
+<% end %>
