@@ -2,7 +2,6 @@ class MessagesController < ApplicationController
   include CableReady::Broadcaster
   before_action :set_message, only: %i[ edit update destroy ]
 
-
   def index
     @messages = Message.all
     respond_to do |format|
@@ -13,42 +12,33 @@ class MessagesController < ApplicationController
 
   def new
     @message = Message.new
-    render operations: cable_car.append(selector: "#messages", html: @message.to_form_html)
+    render operations: cable_car.append("#messages", html: @message.to_form_html)
   end
 
   def edit
-    render operations: cable_car.outer_html(
-      selector: @message,
-      html: @message.to_form_html
-    )
+    render operations: cable_car.outer_html(@message, html: @message.to_form_html)
   end
 
   def create
     @message = Message.new(message_params)
     if @message.save
-      render operations: cable_car
-        .append(selector: "#messages", html: @message.to_html)
-        .remove(selector: "#new_message")
+      render operations: cable_car.append("#messages", html: @message.to_html).remove("#new_message")
     else
-      render operations: cable_car
-        .outer_html(selector: @message, html: @message.to_form_html)
+      render operations: cable_car.outer_html(@message, html: @message.to_form_html)
     end
   end
 
   def update
     if @message.update(message_params)
-      render operations: cable_car
-        .outer_html(selector: @message, html: @message.to_html)
+      render operations: cable_car.outer_html(@message, html: @message.to_html)
     else
-      render operations: cable_car
-        .outer_html(selector: @message, html: @message.to_form_html)
+      render operations: cable_car.outer_html(@message, html: @message.to_form_html)
     end
   end
 
   def destroy
     @message.destroy
-    render operations: cable_car
-      .remove(selector: @message)
+    render operations: cable_car.remove(@message)
   end
 
   private
