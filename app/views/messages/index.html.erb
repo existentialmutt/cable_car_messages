@@ -4,4 +4,4 @@
   <%= render @messages %>
 </div>
 
-<%= link_to "New Message", new_message_path, data: {remote: true} %>
+<%= link_to "New Message", new_message_path, data: {remote: true, method: "GET"} %>

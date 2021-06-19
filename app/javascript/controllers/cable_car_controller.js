@@ -2,18 +2,19 @@ import { Controller } from 'stimulus'
 import CableReady from 'cable_ready'
 
 export default class extends Controller {
-  connect() {
-    console.log("Connect!")
-    this.boundPerform = this.perform.bind(this)
-    this.element.addEventListener("ajax:success", this.boundPerform)
+  connect () {
+    console.log('Connect!')
+    this.element.addEventListener('ajax:success', this.perform)
   }
 
-  perform(event) {
-    console.log("Performing", event)
-    CableReady.perform(event.detail[0])
+  disconnect () {
+    this.element.removeEventListener('ajax:success', this.perform)
   }
 
-  disconnect() {
-    this.element.removeEventListener("ajax:success", this.boundPerform)
+  perform = event => {
+    console.log('Performing', event)
+    event.detail.response
+      .json()
+      .then(operations => CableReady.perform(operations))
   }
 }
