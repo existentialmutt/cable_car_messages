@@ -4,4 +4,6 @@
   <%= render @messages %>
 </div>
 
-<%= link_to "New Message", new_message_path, data: {remote: true, method: "GET"} %>
+<%- unless @message %>
+  <%= link_to "New Message", new_message_path %>
+<%- end %>

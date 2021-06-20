@@ -1,12 +1,16 @@
-<div class="card mb-3" id="<%= dom_id(message) %>">
-  <div class="card-body">
-    <p>
+<%- if message == @message %>
+  <%= render "form" %>
+<%- else %>
+  <div class="card mb-3" id="<%= dom_id(message) %>">
+    <div class="card-body">
       <%= message.content %>
-    </p>
 
-    <div>
-      <%= link_to "[edit]", edit_message_path(message), data: {remote: true, type: "json"} %>
-      <%= link_to "[delete]", message, data: {remote: true, type: "json", method: "DELETE", confirm: "Are you sure?"} %>
+      <%- unless @message %>
+        <div class="mt-2">
+          <%= link_to "[edit]", edit_message_path(message) %>
+          <%= link_to "[delete]", message, data: {remote: true, type: "json", method: "DELETE", confirm: "Are you sure?"} %>
+        </div>
+      <%- end %>
     </div>
   </div>
-</div>
+<%- end %>
